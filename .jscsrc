@@ -1,0 +1,5 @@
+{
+  "disallowTrailingWhitespace": true,
+  "esnext": true,
+  "maximumLineLength": 120
+}
