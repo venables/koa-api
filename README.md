@@ -5,7 +5,7 @@ A barebones API using koa, bookshelf, postgres, mocha
 ## Requirements
 
 * node >= 0.11.16 OR iojs >= 1.0.0
-* postgres
+* postgresql
 
 Recommended:
 

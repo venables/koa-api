@@ -29,10 +29,13 @@
     "iojs": ">= 1.0.0"
   },
   "dependencies": {
+    "bookshelf": "^0.8.1",
+    "knex": "^0.8.6",
     "koa": "^0.21.0",
     "koa-helmet": "^0.2.0",
     "koa-morgan": "^0.3.0",
-    "lodash": "^3.10.0"
+    "lodash": "^3.10.0",
+    "pg": "^4.4.0"
   },
   "devDependencies": {
     "dotenv": "^1.2.0",
