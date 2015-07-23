@@ -18,6 +18,11 @@ module.exports = {
     }
   },
 
+  json: {
+    pretty: false,
+    spaces: 2
+  },
+
   logging: {
     format: 'common'
   },
