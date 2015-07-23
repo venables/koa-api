@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Run this script immediately after cloning the codebase.
+
+# If using Foreman (https://github.com/ddollar/foreman)
+FOREMAN_PORT=3000
+
+echo "port: $FOREMAN_PORT" > .foreman
+if [ -d Procfile.local ]; then
+  echo "web: npm start" > Procfile.local
+fi
+
+# Set up DNS through Pow (http://pow.cx)
+# This allows you to access the app at http://koa-api.dev
+if [ -d ~/.pow ]
+then
+  echo $FOREMAN_PORT > ~/.pow/`basename $PWD`
+fi
+
+# Set up npm dependencies
+npm install
+
+# Set up configurable environment variables for Foreman
+if [ ! -f .env ]; then
+  echo "NODE_ENV=development" > .env
+fi
