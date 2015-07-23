@@ -1,5 +1,7 @@
 'use strict';
 
+var _ = require('lodash');
+
 var index = function *() {
   var records;
   var query = this.models.User.collection().query(function(knex) {
@@ -22,7 +24,20 @@ var show = function *() {
   };
 };
 
+var create = function *() {
+  var model = new this.models.User(_userParams(this.body));
+
+  yield model.save();
+
+  this.status = 201;
+};
+
+function _userParams(body) {
+  return _.pick(body, 'email', 'password');
+}
+
 module.exports = {
   index: index,
-  show: show
+  show: show,
+  create: create
 };
