@@ -25,7 +25,7 @@ createuser -s koa_api
 createdb koa_api_development -U koa_api
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-$DIR/../node_modules/.bin/knex migrate:latest --knexfile src/db/knexfile.js
+$DIR/../node_modules/.bin/knex migrate:latest
 
 # Set up configurable environment variables for Foreman
 if [ ! -f .env ]; then
