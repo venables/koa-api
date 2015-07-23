@@ -1,0 +1,26 @@
+{
+  "name": "koa-api",
+  "version": "0.0.1",
+  "description": "A barebones API using koa, bookshelf, postgres, mocha",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/venables/koa-api.git"
+  },
+  "keywords": [
+    "koa",
+    "bookshelf",
+    "postgres",
+    "mocha",
+    "api"
+  ],
+  "author": "Matt Venables <mattvenables@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/venables/koa-api/issues"
+  },
+  "homepage": "https://github.com/venables/koa-api#readme"
+}
