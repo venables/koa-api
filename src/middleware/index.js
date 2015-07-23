@@ -1,5 +1,6 @@
 'use strict';
 
 module.exports = {
-  config: require('./config')
+  config: require('./config'),
+  models: require('./models')
 };
