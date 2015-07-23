@@ -1,7 +1,9 @@
 'use strict';
 
+var path = require('path');
+
 try {
-  require('dotenv').load();
+  require('dotenv').config({ path: path.join(__dirname, '..', '..', '.env') }).load();
 } catch(e) {}
 
 var _ = require('lodash');
