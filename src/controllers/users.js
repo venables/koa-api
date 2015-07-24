@@ -30,6 +30,9 @@ var create = function *() {
   yield model.save();
 
   this.status = 201;
+  this.body = {
+    user: model.toJSON()
+  };
 };
 
 function _userParams(body) {

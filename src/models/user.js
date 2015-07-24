@@ -12,11 +12,8 @@ var User = bookshelf.Model.extend({
     password: {
       get: function() {},
       set: function(value) {
-        bcrypt.genSalt(10, function(err, salt) {
-          bcrypt.hash(value, salt, function(err, hash) {
-            this.set('password_digest', hash);
-          });
-        });
+        var salt = bcrypt.genSaltSync(10);
+        this.set('password_digest', bcrypt.hashSync(value, salt));
       }
     }
   }
