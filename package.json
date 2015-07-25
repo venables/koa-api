@@ -1,6 +1,6 @@
 {
   "name": "koa-api",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A barebones API using koa, bookshelf, postgres, mocha",
   "main": "src/app.js",
   "scripts": {
