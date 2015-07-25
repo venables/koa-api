@@ -108,7 +108,8 @@ function _indexTemplate(dir) {
 
 module.exports = {
 [FILES]
-};`;
+};
+`;
 
   var files = fs.readdirSync(dir);
   var requires = [];

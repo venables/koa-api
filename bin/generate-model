@@ -3,6 +3,7 @@
 'use strict';
 
 var _ = require('lodash');
+var execSync = require('child_process').execSync;
 var fs = require('fs');
 var path = require('path');
 var program = require('commander');
@@ -23,9 +24,17 @@ program
 
     fs.writeFileSync(filePath, _modelTemplate(className, tableName));
     fs.writeFileSync(indexPath, _indexTemplate(modelsDir));
+    _generateMigration(tableName);
     console.log(`${className} model written to ${filePath}`);
   })
   .parse(process.argv);
+
+function _generateMigration(tableName) {
+  var name = `create_${tableName}`;
+  var generator = path.join(__dirname, 'generate');
+
+  execSync(`${generator} migration ${name}`);
+}
 
 
 function _modelTemplate(className, tableName) {
@@ -38,15 +47,17 @@ var ${className} = bookshelf.Model.extend({
   hasTimestamps: true,
 });
 
-module.exports = bookshelf.model('${className}', ${className});`;
+module.exports = bookshelf.model('${className}', ${className});
+`;
 }
 
 function _indexTemplate(dir) {
-  var template = `'use strict'
+  var template = `'use strict';
 
 module.exports = {
 [FILES]
-};`;
+};
+`;
 
   var files = fs.readdirSync(dir);
   var requires = [];
