@@ -1,0 +1,76 @@
+#!/usr/bin/env node --harmony
+
+'use strict';
+
+var _ = require('lodash');
+var fs = require('fs');
+var path = require('path');
+var program = require('commander');
+_.str = require('underscore.string');
+_.str.inflection = require('inflection');
+
+program
+  .arguments('<name>')
+  .action(function(name) {
+    var className = _.str.classify(name);
+    var underscored = _.str.underscored(name);
+    var camelized = _.str.camelize(underscored);
+    var tableName = _.str.inflection.pluralize(underscored);
+    var modelsDir = path.join(__dirname, '..', 'src', 'models');
+    var filePath = path.join(modelsDir, camelized + '.js');
+    var template = `'use strict';
+
+var bookshelf = require('../db');
+
+var ${className} = bookshelf.Model.extend({
+  tableName: '${tableName}',
+  hasTimestamps: true,
+});
+
+module.exports = bookshelf.model('${className}', ${className});`;
+
+    fs.writeFile(filePath, template, function(err) {
+      if(err) {
+        return console.log(err);
+      }
+
+      indexTemplate(modelsDir, function() {
+        console.log(`${className} model written to ${filePath}`);
+      });
+    });
+  })
+  .parse(process.argv);
+
+
+function indexTemplate(modelsDir, callback) {
+  var filePath = path.join(modelsDir, 'index.js');
+  var template = `'use strict'
+
+module.exports = {
+[FILES]
+};`;
+
+  fs.readdir(modelsDir, function(err, files) {
+    var requires = [];
+
+    _.each(files, function(file) {
+      if (_.str.isBlank(file) || file === 'index.js' || _.str.startsWith(file, '.')) {
+        return;
+      }
+
+      var name = file.split('.')[0];
+      var className = _.str.classify(name);
+      requires.push(`  ${className}: require('./${name}'),`);
+    });
+
+    template = template.replace('[FILES]', requires.join('\n'));
+
+    fs.writeFile(filePath, template, function(err) {
+      if(err) {
+        console.log(err);
+      }
+
+      callback();
+    });
+  });
+}

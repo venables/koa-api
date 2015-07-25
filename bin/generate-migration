@@ -1,0 +1,12 @@
+#!/usr/bin/env node --harmony
+
+'use strict';
+
+var program = require('commander');
+
+program
+  .arguments('<name>')
+  .action(function(name) {
+    console.log(name);
+  })
+  .parse(process.argv);

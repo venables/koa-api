@@ -1,0 +1,13 @@
+#!/usr/bin/env node --harmony
+
+'use strict';
+
+var program = require('commander');
+
+program
+  .usage('GENERATOR [name]')
+  .arguments('<generator> [name]')
+  .command('model [name]', 'generate a model')
+  .command('controller [name]', 'generate a controller')
+  .command('migration [name]', 'generate a migration')
+  .parse(process.argv);
