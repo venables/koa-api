@@ -5,7 +5,7 @@ var bookshelf = require('../db');
 var User = bookshelf.Model.extend({
   tableName: 'users',
   hasTimestamps: true,
-  hasPasswordDigest: true,
+  hasSecurePassword: true,
   visible: ['id', 'email', 'created_at']
 }, {
 

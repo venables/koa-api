@@ -25,7 +25,7 @@ var show = function *() {
 };
 
 var create = function *() {
-  var model = new this.models.User(_userParams(this.body));
+  var model = new this.models.User(_userParams(this.request.body));
 
   yield model.save();
 
