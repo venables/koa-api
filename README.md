@@ -32,14 +32,6 @@ This will create a new `User` model (referencing a `users` table) named `user.js
 
 This will also create an empty migration named `<timestamp>_create_users.js` in the `src/db/migrate` directory.
 
-### Migration Generator
-
-```
-./bin/generate migration create_users
-```
-
-This will create a new migration named `<timestamp>_create_users.js` in `src/db/migrate` directory.
-
 ### Controller Generator
 
 ```
@@ -50,6 +42,22 @@ This will create a new RESTful controller named `users` in the `src/controllers`
 
 The controller contains `index`, `show`, `create`, `update`, and `destroy` methods, as well as their routes.
 
+### Migration Generator
+
+```
+./bin/generate migration create_users
+```
+
+This will create a new migration named `<timestamp>_create_users.js` in `src/db/migrate` directory.
+
+
+### Scaffold Generator
+
+```
+./bin/generate scaffold User
+```
+
+This will run the model, migration and controller generators for a new `User` model.
 
 
 ## Running

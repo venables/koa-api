@@ -7,7 +7,8 @@ var program = require('commander');
 program
   .usage('GENERATOR [name]')
   .arguments('<generator> [name]')
-  .command('model [name]', 'generate a model')
-  .command('controller [name]', 'generate a controller')
-  .command('migration [name]', 'generate a migration')
+  .command('model [Model]', 'generate a model')
+  .command('controller [controllerName]', 'generate a controller')
+  .command('migration [migration_name]', 'generate a migration')
+  .command('scaffold [Model]', 'generate scaffolding for a model')
   .parse(process.argv);

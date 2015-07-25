@@ -104,7 +104,7 @@ module.exports = {
 }
 
 function _indexTemplate(dir) {
-  var template = `'use strict'
+  var template = `'use strict';
 
 module.exports = {
 [FILES]

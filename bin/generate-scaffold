@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var _ = require('lodash');
+var execSync = require('child_process').execSync;
+var path = require('path');
+var program = require('commander');
+_.str = require('underscore.string');
+_.str.inflection = require('inflection');
+
+program
+  .arguments('<name>')
+  .action(function(name) {
+    var generator = path.join(__dirname, 'generate');
+
+    var underscored = _.str.underscored(name);
+    var camelized = _.str.camelize(underscored);
+    var controllerName = _.str.inflection.pluralize(camelized);
+
+    execSync(`${generator} model ${name}`);
+    execSync(`${generator} controller ${controllerName}`);
+
+    console.log(`${name} scaffolding generated.`);
+  })
+  .parse(process.argv);
