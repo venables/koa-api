@@ -1,7 +1,7 @@
 'use strict';
 
 var create = function *() {
-  var user = yield this.models.User.authenticate(this.body.email, this.body.password);
+  var user = yield this.models.User.authenticate(this.request.body.email, this.request.body.password);
 
   if (user) {
     this.status = 201;
