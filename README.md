@@ -1,5 +1,7 @@
 # koa-api
 
+[![Dependency Status](https://david-dm.org/venables/koa-api.png)](https://david-dm.org/venables/koa-api)
+
 A barebones API using koa, bookshelf, postgres, mocha
 
 ## Requirements
