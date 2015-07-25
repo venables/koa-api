@@ -1,12 +1,17 @@
-#!/usr/bin/env node --harmony
+#!/usr/bin/env node
 
 'use strict';
 
+var exec = require('child_process').exec;
+var path = require('path');
 var program = require('commander');
 
 program
   .arguments('<name>')
   .action(function(name) {
-    console.log(name);
+    var knex = path.join(__dirname, '..', 'node_modules', '.bin', 'knex');
+    exec(`${knex} migrate:make ${name}`, function(err, stdout) {
+      console.log(err || stdout);
+    });
   })
   .parse(process.argv);
