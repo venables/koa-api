@@ -2,11 +2,152 @@
 
 'use strict';
 
+var _ = require('lodash');
+var fs = require('fs');
+var path = require('path');
 var program = require('commander');
+_.str = require('underscore.string');
+_.str.inflection = require('inflection');
 
 program
   .arguments('<name>')
-  .action(function(name) {
-    console.log(name);
+  .action(function(plural) {
+    plural = plural.toLowerCase();
+    var singular = _.str.inflection.singularize(plural);
+    var className = _.str.classify(singular);
+
+    var controllersDir = path.join(__dirname, '..', 'src', 'controllers');
+
+    var filePath = path.join(controllersDir, plural + '.js');
+    var indexPath = path.join(controllersDir, 'index.js');
+
+    fs.writeFileSync(filePath, _controllerTemplate(className, singular, plural));
+    fs.writeFileSync(indexPath, _indexTemplate(controllersDir));
+    _writeRoutes(plural);
+    console.log(`${plural} controller written to ${filePath}`);
   })
   .parse(process.argv);
+
+function _controllerTemplate(className, singular, plural) {
+  return `'use strict';
+
+var _ = require('lodash');
+
+var index = function *() {
+  var query = this.models.${className}.collection().query(function(knex) {
+    knex.limit(50).offset(0).orderBy('created_at', 'asc');
+  });
+
+  var ${plural} = yield query.fetch();
+
+  this.body = {
+    ${plural}: ${plural}.toJSON()
+  };
+};
+
+var show = function *() {
+  var ${singular} = yield _fetch${className}(this);
+
+  this.body = {
+    ${singular}: ${singular}.toJSON()
+  };
+};
+
+var create = function *() {
+  var ${singular} = new this.models.${className}(_${singular}Params(this.request.body));
+
+  yield ${singular}.save();
+
+  this.status = 201;
+  this.body = {
+    ${singular}: ${singular}.toJSON()
+  };
+};
+
+var update = function *() {
+  var ${singular} = yield _fetch${className}(this);
+
+  yield ${singular}.save(_${singular}Params(this.request.body));
+
+  this.status = 200;
+  this.body = {
+    ${singular}: ${singular}.toJSON()
+  };
+};
+
+var destroy = function *() {
+  var ${singular} = yield _fetch${className}(this);
+
+  yield ${singular}.destroy();
+
+  this.status = 204;
+};
+
+function *_fetch${className}(ctx) {
+  var model = new ctx.models.${className}({ id: ctx.params.id });
+  return yield model.fetch({ require: true });
+}
+
+function _${singular}Params(body) {
+  // TODO: Whitelist params for creating & updating a ${className}.
+  return _.pick(body, '');
+}
+
+module.exports = {
+  index: index,
+  show: show,
+  create: create,
+  update: update,
+  destroy: destroy
+};
+`;
+}
+
+function _indexTemplate(dir) {
+  var template = `'use strict'
+
+module.exports = {
+[FILES]
+};`;
+
+  var files = fs.readdirSync(dir);
+  var requires = [];
+
+  _.each(files, function(file) {
+    if (_.str.isBlank(file) || file === 'index.js' || _.str.startsWith(file, '.')) {
+      return;
+    }
+
+    var name = file.split('.')[0];
+    var className = _.str.classify(name);
+    requires.push(`  ${className}: require('./${name}'),`);
+  });
+
+  return template.replace('[FILES]', requires.join('\n'));
+}
+
+function _routerTemplate(plural) {
+  return `
+router.get('/${plural}', controllers.${plural}.index);
+router.get('/${plural}/:id', controllers.${plural}.show);
+router.post('/${plural}', controllers.${plural}.create);
+router.put('/${plural}/:id', controllers.${plural}.update);
+router.del('/${plural}/:id', controllers.${plural}.destroy);
+`;
+}
+
+function _writeRoutes(plural) {
+  var routesPath = path.join(__dirname, '..', 'src', 'routes.js');
+  var template = _routerTemplate(plural);
+
+  var routes = fs.readFileSync(routesPath, 'utf8');
+  var lines = routes.split('\n');
+
+  var exportLine = _.findLastIndex(lines, function(text) {
+    _.str.startsWith(text, 'module.exports');
+  });
+
+  lines.splice(exportLine - 1, 0, template);
+
+  fs.writeFileSync(routesPath, lines.join('\n'));
+}
