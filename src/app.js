@@ -1,7 +1,7 @@
 'use strict';
 
 var app = require('koa')();
-var body = require('koa-bodyparser');
+var body = require('koa-json-body');
 var config = require('./config');
 var helmet = require('koa-helmet');
 var json = require('koa-json');
