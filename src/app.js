@@ -16,5 +16,6 @@ app.use(json(config.json));
 app.use(middleware.config);
 app.use(middleware.models);
 app.use(router.routes());
+app.use(router.allowedMethods());
 
 module.exports = app;
