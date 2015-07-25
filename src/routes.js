@@ -7,4 +7,6 @@ router.get('/users', controllers.users.index);
 router.get('/users/:id', controllers.users.show);
 router.post('/users', controllers.users.create);
 
+router.post('/sessions', controllers.sessions.create);
+
 module.exports = router;
