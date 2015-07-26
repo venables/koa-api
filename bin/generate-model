@@ -32,8 +32,36 @@ program
 function _generateMigration(tableName) {
   var name = `create_${tableName}`;
   var generator = path.join(__dirname, 'generate');
+  var migrationDir = path.join(__dirname, '..', 'src', 'db', 'migrations');
 
   execSync(`${generator} migration ${name}`);
+
+  var files = fs.readdirSync(migrationDir);
+  var file = _.findLast(files, function(filename) {
+    console.log(`does ${filename} end with '${name}.js'`);
+    return _.endsWith(filename, `${name}.js`);
+  });
+
+  fs.writeFileSync(path.join(migrationDir, file), _migrationTemplate(tableName));
+  console.log('wrote to ' +file);
+}
+
+function _migrationTemplate(tableName) {
+  return `'use strict';
+
+exports.up = function(knex) {
+  return knex.schema.createTable('${tableName}', function(table) {
+    table.uuid('id').primary().defaultsTo(knex.raw('uuid_generate_v4()'));
+
+
+    table.timestamps();
+  });
+};
+
+exports.down = function(knex) {
+  return knex.schema.dropTableIfExists('${tableName}');
+};
+`;
 }
 
 
